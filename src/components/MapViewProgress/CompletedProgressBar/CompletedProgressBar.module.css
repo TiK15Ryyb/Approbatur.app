@@ -1,0 +1,41 @@
+.progressBar.progressBar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: initial;
+  height: initial;
+}
+.root {
+  position: relative;
+  width: 308px;
+  height: 53px;
+  align-items: flex-start;
+}
+.rectangle3 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow: visible;
+}
+.icon {
+  width: 100%;
+  height: 100%;
+}
+.complete {
+  color: #fff;
+  font-size: 36px;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+}

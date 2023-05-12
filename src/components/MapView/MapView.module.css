@@ -1,0 +1,64 @@
+.marker.marker {
+  position: absolute;
+  left: 12px;
+  top: 181px;
+}
+.marker2.marker2 {
+  position: absolute;
+  left: 199px;
+  top: 238px;
+}
+.marker3.marker3 {
+  position: absolute;
+  left: 64px;
+  top: 394px;
+}
+.marker4.marker4 {
+  position: absolute;
+  left: 181px;
+  top: 415px;
+}
+.marker5.marker5 {
+  position: absolute;
+  left: 293px;
+  top: 283px;
+}
+.marker6.marker6 {
+  position: absolute;
+  left: 119px;
+  top: 225px;
+}
+.progressBar.progressBar {
+  position: absolute;
+  left: 41px;
+  top: 76px;
+}
+.root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  align-items: flex-start;
+  background-color: #fff;
+  overflow: hidden;
+}
+.iPhone141 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 390px;
+  height: 844px;
+  align-items: flex-start;
+  background-color: #fff;
+  overflow: hidden;
+}
+.screenshot2023511At23441 {
+  position: absolute;
+  left: -339px;
+  top: -138px;
+  width: 1011px;
+  height: 1153px;
+  background-image:/* webpackIgnore: true */ url('/assets/screenshot2023511At23441.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}

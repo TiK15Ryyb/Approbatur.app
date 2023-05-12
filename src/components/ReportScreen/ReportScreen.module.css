@@ -1,0 +1,81 @@
+.button.button {
+  position: absolute;
+  left: 70px;
+  top: 369px;
+}
+.start {
+  color: #000;
+  font-size: 36px;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+  position: absolute;
+  left: 16.8%;
+  right: 16.4%;
+  top: 29.2453%;
+  bottom: 29.2453%;
+  width: min-content;
+  height: min-content;
+  text-align: center;
+  align-items: center;
+  white-space: nowrap;
+  flex-direction: column;
+}
+.root {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  align-items: flex-start;
+  background-color: #fff;
+  overflow: hidden;
+}
+.youDidIt {
+  position: absolute;
+  left: 27px;
+  top: 67px;
+  width: 213px;
+  height: 57px;
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+}
+.textBlock {
+  color: #000;
+  font-size: 36px;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+}
+.textBlock2 {
+  margin-top: 0;
+  color: #000;
+  font-size: 36px;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+}
+.youCompleted {
+  color: #000;
+  font-size: 36px;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+  position: absolute;
+  left: 37px;
+  top: 124px;
+  width: 311px;
+  height: 57px;
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+}
+._45Bars {
+  color: #000;
+  font-size: 36px;
+  font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+  position: absolute;
+  left: 21px;
+  top: 196px;
+  width: 348px;
+  height: 57px;
+  text-align: center;
+  align-items: center;
+  flex-direction: column;
+}
