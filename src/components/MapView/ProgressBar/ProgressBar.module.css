@@ -1,5 +1,6 @@
 .root {
-  position: relative;
+  position: absolute;
+  z-index: 20;
   width: 308px;
   height: 53px;
   align-items: flex-start;

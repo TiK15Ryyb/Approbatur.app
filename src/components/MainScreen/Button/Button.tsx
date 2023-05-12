@@ -10,15 +10,18 @@ interface Props {
     root?: string;
   };
 }
-/* @figmaId 2:59 */
+
+import Link from 'next/link';
+
 export const Button: FC<Props> = memo(function Button(props = {}) {
   return (
-    <a href='./map'>
-      <button 
-        className={`${resets.clapyResets} ${props.classes?.root || ''} ${props.className || ''} ${classes.root}`}>
-        <div className={classes.rectangle2}></div>
-        <div className={classes.start}>start</div>
-      </button>
-    </a>
+    <Link href="/map">
+        <button 
+          className={`${resets.clapyResets} ${props.classes?.root || ''} ${props.className || ''} ${classes.root}`}>
+          <div className={classes.rectangle2}></div>
+          <div className={classes.start}>start</div>
+        </button>
+    </Link>
   );
 });
+

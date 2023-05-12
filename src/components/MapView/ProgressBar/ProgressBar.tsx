@@ -1,21 +1,22 @@
 import { memo } from 'react';
 import type { FC } from 'react';
 
-import resets from '../../_resets.module.css';
 import classes from './ProgressBar.module.css';
 
 interface Props {
   className?: string;
-  classes?: {
-    root?: string;
-  };
+  totalBars: number;
+  visitedBars: number;
 }
-/* @figmaId 2:68 */
-export const ProgressBar: FC<Props> = memo(function ProgressBar(props = {}) {
+
+export const ProgressBar: FC<Props> = memo(function ProgressBar({ className, totalBars, visitedBars }) {
+  const progress = (visitedBars / totalBars) * 100;
+
   return (
-    <div className={`${resets.clapyResets} ${props.classes?.root || ''} ${props.className || ''} ${classes.root}`}>
-      <div className={classes.rectangle4}></div>
-      <div className={classes.rectangle3}></div>
+    <div className={`${classes.root} ${className}`}>
+      <div className={classes.rectangle4}>
+        <div className={classes.rectangle3} style={{ right: `${100 - progress}%` }}></div>
+      </div>
     </div>
   );
 });
