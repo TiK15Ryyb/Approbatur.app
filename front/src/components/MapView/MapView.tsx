@@ -28,9 +28,25 @@ const MapView: React.FC = () => {
   });
   const [selectedBar, setSelectedBar] = useState<any>(BarCrawlData[0]);
   const [visitedBars, setVisitedBars] = useState(new Array(BarCrawlData.length).fill(false));
+  const [justVisited, setJustVisited] = useState(false);
+
+  const completionLimits = [ { limit: 2 }, { limit: 3 }, { limit: 5 }]
 
   const visitedBarsCount = visitedBars.filter(x => x).length
 
+  const canComplete = completionLimits.some(limitObj => visitedBarsCount >= limitObj.limit )
+  
+
+  const navigateToSummaryScreen = () => {
+    window.location.href = "/report"
+  }
+
+  const handleFinish = () => {
+      if (window.confirm("Are you sure you want to finish the Appro?")) {
+        navigateToSummaryScreen();
+      }
+    }
+  
   useEffect(() => {
     const listener = (e: any) => {
       if (e.key === "Escape") {
@@ -80,20 +96,36 @@ const MapView: React.FC = () => {
             }}
           >
             <div>
-              <h2>{selectedBar.name}</h2>
-              <p>{selectedBar.address}</p>
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            <h2>{selectedBar.name}</h2>
+            <p>{selectedBar.address}</p>
+          { visitedBars[selectedBar.id] 
+            ? <button
+                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
                 onClick={(e) => {
                   e.preventDefault();
                   let newVisitedBars = [...visitedBars];
-                  newVisitedBars[selectedBar.id] = true;
+                  newVisitedBars[selectedBar.id] = false;
                   setVisitedBars(newVisitedBars);
-                  setSelectedBar(null);
                 }}
               >
-                Mark completed
+                Revert status
               </button>
+            : <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={(e) => {
+                e.preventDefault();
+                let newVisitedBars = [...visitedBars];
+                newVisitedBars[selectedBar.id] = true;
+                setVisitedBars(newVisitedBars);
+                setSelectedBar(null);
+                setJustVisited(true);
+                setTimeout(() => setJustVisited(false), 2000);
+              }}
+            
+            >
+              Mark completed
+            </button>
+          }
             </div>
           </Popup>
         ) : null}
@@ -106,6 +138,12 @@ const MapView: React.FC = () => {
             trackUserLocation={true}
           />
         </div>
+        {justVisited ? <div className="absolute z-20 bottom-1 left-0 p-3 m-3 bg-green-400 rounded text-black">Marked as visited!</div> : null}
+        {canComplete ? (
+          <button className="z-20 fixed bottom-0 right-0 m-5 p-3 bg-blue-500 text-white rounded" onClick={handleFinish}>
+            Finish Appro
+          </button>
+        ) : null}
       </ReactMapGL>
     </div>
   );

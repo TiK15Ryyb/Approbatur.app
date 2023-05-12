@@ -1,33 +1,40 @@
+'use client'
+
 import { memo } from 'react';
 import type { FC } from 'react';
-
-import resets from '../_resets.module.css';
-import { Button } from './Button/Button';
-import classes from './ReportScreen.module.css';
+import { BarCrawlData } from '@/data/BarCrawlData';
 
 interface Props {
   className?: string;
+  visitedBars: number;
+  setVisitedBars?: (barList: Array<any>) => void;
 }
-/* @figmaId 2:121 */
-export const ReportScreen: FC<Props> = memo(function ReportScreen(props = {}) {
+
+export const ReportScreen: FC<Props> = memo(function ReportScreen({ className }) {
+  const visitedBars = location.pathname.split("/").pop()
+
   return (
-    <div className={`${resets.clapyResets} ${classes.root}`}>
-      <div className={classes.youDidIt}>
-        <div className={classes.textBlock}>You did it</div>
-        <div className={classes.textBlock2}>
-          <p></p>
-        </div>
-      </div>
-      <div className={classes.youCompleted}>You completed</div>
-      <div className={classes._45Bars}>4/5 Bars</div>
-      <a href='/map-progressed'>
-      <Button
-        className={classes.button}
-        text={{
-          start: <div className={classes.start}>View map</div>,
+    <div className="flex flex-col items-center justify-center bg-white h-screen w-screen">
+      <div className="text-4xl font-semibold mb-4">You did it!</div>
+      <div className="text-4xl font-semibold mb-8">You completed {visitedBars} Bars</div>
+      <button
+        className="p-2 m-2 bg-blue-500 rounded text-white"
+        onClick={() => {
+          // share on Telegram
+          window.location.href = "https://t.me/share/url?url=https://barcrawl.app&text=I%20completed%20the%20Bar%20Crawl%20App%20and%20visited%20" + visitedBars + "%20Bars%20in%20Berlin%20🍻"
         }}
-      />
-      </a>
+      >
+        Share on Telegram
+      </button>
+      <button
+        className="p-2 m-2 bg-blue-500 rounded text-white"
+        onClick={() => {
+          // reset the visitedBars state and navigate back to the map view
+          window.location.href = "/map"
+        }}
+      >
+        Start New Appro
+      </button>
     </div>
   );
 });
