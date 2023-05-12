@@ -10,3 +10,25 @@ services:
     image: ghcr.io/tik15ryyb/approbatur-app-front
     ports:
       - 3010:3000
+  data-structure-service:
+    build: 
+      context: DataStructureService
+      dockerfile: ../docker/DataStructureService.Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      SQLALCHEMY_DATABASE_URI: postgresql://my-postgres:mysecretpassword@db:5432/approbator
+    depends_on:
+      - db
+  db:
+    image: "postgres:13"
+    environment:
+      POSTGRES_USER: my-postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: approbator
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
+
