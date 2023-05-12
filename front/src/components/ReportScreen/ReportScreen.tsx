@@ -6,12 +6,10 @@ import { BarCrawlData } from '@/data/BarCrawlData';
 
 interface Props {
   className?: string;
-  visitedBars: number;
-  setVisitedBars?: (barList: Array<any>) => void;
 }
 
 export const ReportScreen: FC<Props> = memo(function ReportScreen({ className }) {
-  const visitedBars = location.pathname.split("/").pop()
+  const visitedBars = 1
 
   return (
     <div className="flex flex-col items-center justify-center bg-white h-screen w-screen">
