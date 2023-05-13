@@ -14,9 +14,12 @@ def create_app():
         from admin import admin as admin_blueprint  # move imports here
         from main import main as main_blueprint
         from main import routes
+        from admin import setup_admin
+
         app.register_blueprint(main_blueprint)
         app.register_blueprint(admin_blueprint)
         geolocator = Nominatim(user_agent="myGeocoder")
+        setup_admin(app, db)
 
         from models import Bar, Crawl, User, users_crawls, admins_crawls, crawls_bars
 
