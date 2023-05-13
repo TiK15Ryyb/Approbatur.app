@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_admin import Admin
+from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from geopy.geocoders import Nominatim
 from config import Config
@@ -9,6 +10,7 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
     db.init_app(app)
+    CORS(app, resources={r"/*": {"origins": "*"}})
     
     with app.app_context():
         from admin import admin as admin_blueprint  # move imports here
