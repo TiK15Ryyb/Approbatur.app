@@ -9,7 +9,8 @@ class Crawl(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=True)
-    location = db.Column(db.String(200), nullable=False)
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
     image_url = db.Column(db.String(500), nullable=True)
     bars = db.relationship(Bar, secondary="crawls_bars", back_populates="crawls")
     admins = db.relationship("User", secondary="admins_crawls", back_populates="owned_crawls")
@@ -20,6 +21,10 @@ class Crawl(db.Model):
             "id": self.id,
             "name": self.name,
             "description": self.description,
+            "location": {
+                "latitude": self.latitude,
+                "longitude": self.longitude,
+            },
         }
     
     def to_dict_with_bars(self):
@@ -28,6 +33,10 @@ class Crawl(db.Model):
             "name": self.name,
             "description": self.description,
             "bars": [bar.to_dict() for bar in self.bars],
+            "location": {
+                "latitude": self.latitude,
+                "longitude": self.longitude,
+            },
         }
 
     def to_dict_with_users(self):
@@ -36,6 +45,10 @@ class Crawl(db.Model):
             "name": self.name,
             "description": self.description,
             "users": [user.to_dict() for user in self.users],
+            "location": {
+                "latitude": self.latitude,
+                "longitude": self.longitude,
+            },
         }
 
     def to_dict_with_admins(self):
@@ -44,4 +57,8 @@ class Crawl(db.Model):
             "name": self.name,
             "description": self.description,
             "admins": [admin.to_dict() for admin in self.admins],
+            "location": {
+                "latitude": self.latitude,
+                "longitude": self.longitude,
+            },
         }

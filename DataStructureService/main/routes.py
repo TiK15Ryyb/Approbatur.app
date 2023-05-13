@@ -24,7 +24,7 @@ def create_bar():
     bar = Bar(
         name=data["name"],
         description=data["description"],
-        location=data["location"],
+        latitude=data["latitude"],longitude=data["longitude"],
         rating=data["rating"],
         image_url=data["image_url"],
     )
@@ -71,7 +71,7 @@ def create_crawl():
     crawl = Crawl(
         name=data["name"],
         description=data["description"],
-        location=data["location"],
+        latitude=data["latitude"],longitude=data["longitude"],
         image_url=data["image_url"],
     )
     db.session.add(crawl)
