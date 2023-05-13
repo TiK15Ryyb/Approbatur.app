@@ -7,6 +7,7 @@ services:
       dockerfile: docker/front.Dockerfile
       args:
         - NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1IjoidGFwaWlyaSIsImEiOiJjbGhrZnM0NnUwcmkxM2tudWF1Zm95MHY1In0.geANXRleHX7AcKW0l4pKFg
+        - NEXT_PUBLIC_API_URL=http://localhost:5010
     image: ghcr.io/tik15ryyb/approbatur-app-front
     ports:
       - 3010:3000
@@ -15,7 +16,7 @@ services:
       context: DataStructureService
       dockerfile: ../docker/DataStructureService.Dockerfile
     ports:
-      - "5000:5000"
+      - "5010:5000"
     environment:
       SQLALCHEMY_DATABASE_URI: postgresql://my-postgres:mysecretpassword@db:5432/approbator
     depends_on:

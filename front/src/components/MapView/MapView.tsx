@@ -5,8 +5,9 @@ import ReactMapGL, { Marker, Popup, NavigationControl, FullscreenControl, Geoloc
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import { ProgressBar } from './ProgressBar/ProgressBar';
-import { BarCrawlData } from '@/data/BarCrawlData';
 import { Badges } from '../Badges/Badges';
+import { getCrawl } from '@/lib/getCrawl';
+import { useSearchParams } from "next/navigation"
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
@@ -18,17 +19,51 @@ interface Viewport {
   pitch: number;
 }
 
-const MapView: React.FC = () => {
+interface Props {
+  crawl?: any;
+}
+
+const MapView: React.FC<Props> = () => {
+  const params = useSearchParams()
+  const crawlId = params.get("crawlId")
+
+  const [crawl, setCrawl] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchCrawl = async () => {
+      const data = await getCrawl(crawlId as string);
+      setCrawl(data);
+    };
+
+    fetchCrawl();
+  }, [crawlId]);
+
   const [viewport, setViewport] = useState<Viewport>({
-    latitude: BarCrawlData[0].location.lat,
-    longitude: BarCrawlData[0].location.lng,
+    latitude: crawl?.bars[0].location.latitude || 0,
+    longitude: crawl?.bars[0].location.longitude || 0,
     zoom: 14,
     bearing: 0,
     pitch: 0
   });
-  const [selectedBar, setSelectedBar] = useState<any>(BarCrawlData[0]);
-  const [visitedBars, setVisitedBars] = useState(new Array(BarCrawlData.length).fill(false));
+  const [selectedBar, setSelectedBar] = useState<any>(crawl?.bars[0]);
+  const [visitedBars, setVisitedBars] = useState(new Array(crawl?.bars.length).fill(false));
   const [justVisited, setJustVisited] = useState(false);
+  
+  //Create and store user id in cookies
+  const [userId, setUserId] = useState<string | null>(null);
+  useEffect(() => {
+    if (userId === null) {
+      const userId = localStorage.getItem('userId');
+      if (userId === null) {
+        const newUserId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        localStorage.setItem('userId', newUserId);
+        setUserId(newUserId);
+      } else {
+        setUserId(userId);
+      }
+    }
+  }, [userId]);
+
 
   const completionLimits = [ { limit: 2 }, { limit: 3 }, { limit: 5 }]
 
@@ -60,9 +95,13 @@ const MapView: React.FC = () => {
     };
   }, []);
 
+  if (!crawl) {
+    return <div>Loading...</div>
+  }
+
   return (
     <div style={{ position: 'relative', height: '100vh' }}>
-      <ProgressBar totalBars={BarCrawlData.length} visitedBars={visitedBarsCount}/>
+      <ProgressBar totalBars={crawl?.bars.length} visitedBars={visitedBarsCount}/>
       <Badges visitedBars={visitedBarsCount} />
       <ReactMapGL
         {...viewport}
@@ -71,8 +110,15 @@ const MapView: React.FC = () => {
         onMove={evt => setViewport(evt.viewState)}
         style={{ width:'100vw', height:'100vh' }}
       >
-        {BarCrawlData.map((bar) => (
-          <Marker key={bar.id} latitude={bar.location.lat} longitude={bar.location.lng}>
+        { !crawl?.bars.length &&
+          <div className="grey-opacity-overlay absolute top-0 left-0 w-full h-full flex items-center justify-center opacity-20 bg-slate-300">
+            <div className="flex flex-col items-center justify-center h-full">
+                <p className="text-2xl font-bold">Crawl was not found.</p>
+            </div>
+          </div>
+        }
+        {crawl?.bars.map((bar: any) => (
+          <Marker key={bar.id} latitude={bar.location.latitude} longitude={bar.location.longitude}>
             <button
               className="marker-btn"
               onClick={(e) => {
@@ -89,8 +135,8 @@ const MapView: React.FC = () => {
 
         {selectedBar ? (
           <Popup
-            latitude={selectedBar.location.lat}
-            longitude={selectedBar.location.lng}
+            latitude={selectedBar.location.latitude}
+            longitude={selectedBar.location.longitude}
             onClose={() => {
               setSelectedBar(null);
             }}

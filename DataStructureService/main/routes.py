@@ -1,12 +1,55 @@
 from flask import request, jsonify, current_app as app
+from flask_cors import cross_origin
 from app import db
 from models import Bar, Crawl, User
 
-
 @app.route("/")
+@cross_origin()
 def hello():
     return "Hello, Approbator!"
+
+@app.route("/initialize")
+def initialize():
+    # Init DB
     db.create_all()
+    # Create a user
+    user = User(
+        name="John Doe",
+        username="jdoe",
+    )
+    db.session.add(user)
+    db.session.commit()
+    # Create a bar
+    bar = Bar(
+        name="The Bar",
+        description="A bar",
+        latitude=0.0,
+        longitude=0.0,
+        rating=5,
+        image_url="https://www.google.com",
+    )
+    db.session.add(bar)
+    db.session.commit()
+    # Create a crawl
+    crawl = Crawl(
+        name="The Crawl",
+        description="A crawl",
+        latitude=0.0,
+        longitude=0.0,
+        image_url="https://www.google.com",
+    )
+    db.session.add(crawl)
+    db.session.commit()
+    # Add bar to crawl
+    crawl.bars.append(bar)
+    db.session.commit()
+    # Add user to crawl
+    crawl.users.append(user)
+    db.session.commit()
+    # Add user as admin of crawl
+    crawl.admins.append(user)
+    db.session.commit()
+    return "Initialized!"
 
 @app.route("/api/bars", methods=["GET"])
 def get_bars():
@@ -57,13 +100,31 @@ def delete_bar(bar_id):
 
 @app.route("/api/crawls", methods=["GET"])
 def get_crawls():
-    crawls = Crawl.query.all()
-    return jsonify([crawl.to_dict() for crawl in crawls])
+    params = request.args
+    limit = params.get("limit") or 10
+    crawls = Crawl.query.limit(int(limit)).all()
+    expand = params.get("expand").split(",") if params.get("expand") else []
+    return jsonify([{
+        **crawl.to_dict(),
+        "users": [user.to_dict() for user in crawl.users] if "users" in expand else None,
+        "bars": [bar.to_dict() for bar in crawl.bars] if "bars" in expand else None,
+        "admins": [admin.to_dict() for admin in crawl.admins] if "admins" in expand else None,
+        } for crawl in crawls])
 
 @app.route("/api/crawls/<int:crawl_id>", methods=["GET"])
+@app.route("/")
 def get_crawl(crawl_id):
     crawl = Crawl.query.get(crawl_id)
-    return jsonify(crawl.to_dict())
+    if not crawl:
+        return jsonify({"error": "Crawl not found"}), 404
+    params = request.args
+    expand = params.get("expand").split(",") if params.get("expand") else []
+    return jsonify({
+        **crawl.to_dict(),
+        "users": [user.to_dict() for user in crawl.users] if "users" in expand else None,
+        "bars": [bar.to_dict() for bar in crawl.bars] if "bars" in expand else None,
+        "admins": [admin.to_dict() for admin in crawl.admins] if "admins" in expand else None,
+    })
 
 @app.route("/api/crawls", methods=["POST"])
 def create_crawl():

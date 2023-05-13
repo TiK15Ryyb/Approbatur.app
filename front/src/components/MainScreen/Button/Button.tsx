@@ -9,13 +9,14 @@ interface Props {
   classes?: {
     root?: string;
   };
+  crawlId?: any;
 }
 
 import Link from 'next/link';
 
 export const Button: FC<Props> = memo(function Button(props = {}) {
   return (
-    <Link href="/map">
+    <Link href={`/map?crawlId=${props.crawlId}`}>
         <button 
           className={`${resets.clapyResets} ${props.classes?.root || ''} ${props.className || ''} ${classes.root}`}>
           <div className={classes.rectangle2}></div>
