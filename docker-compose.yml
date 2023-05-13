@@ -16,7 +16,7 @@ services:
       context: DataStructureService
       dockerfile: ../docker/DataStructureService.Dockerfile
     ports:
-      - "5000:5000"
+      - "5010:5000"
     environment:
       SQLALCHEMY_DATABASE_URI: postgresql://my-postgres:mysecretpassword@db:5432/approbator
     depends_on:
