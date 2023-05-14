@@ -2,6 +2,9 @@ from flask import request, jsonify, current_app as app
 from flask_cors import cross_origin
 from app import db
 from models import Bar, Crawl, User
+from math import radians, sin, cos, sqrt, atan2
+from sqlalchemy.sql.expression import func
+
 
 @app.route("/")
 @cross_origin()
@@ -323,6 +326,37 @@ def remove_user_owned_crawl(user_id, crawl_id):
     user.owned_crawls.remove(crawl)
     db.session.commit()
     return jsonify(user.to_dict())
+
+# Route for finding the closest bar to a given location
+@app.route("/api/bars/closest", methods=["GET"])
+def get_closest_bar():
+    data = request.json
+    lat = data["latitute"]
+    lng = data["longitude"]
+    def haversine(lon1, lat1, lon2, lat2):
+        # Convert coordinates to radians
+        lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
+
+        # Haversine formula
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+        a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        # Earth's radius in kilometers (mean radius = 6,371km)
+        radius = 6371.0
+
+        # Return distance in kilometers
+        return radius * c
+
+    # Use the haversine function as a SQL function
+    haversine_func = func.haversine(Bar.longitude, Bar.latitude, lng, lat)
+
+    # Query the Bar table, ordering by distance
+    bar = Bar.query.order_by(haversine_func).first()
+
+    # Return the closest bar
+    return jsonify(bar.to_dict())
 
 
 if __name__ == "__main__":
