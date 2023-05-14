@@ -9,6 +9,7 @@ services:
       - "5010:5000"
     environment:
       SQLALCHEMY_DATABASE_URI: postgresql://my-postgres:mysecretpassword@db:5432/approbator
+      SERVER_NAME: localhost:5010
     depends_on:
       - db
   db:
