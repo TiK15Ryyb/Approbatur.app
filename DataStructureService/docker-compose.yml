@@ -7,8 +7,10 @@ services:
       dockerfile: ../docker/DataStructureService.Dockerfile
     ports:
       - "5010:5000"
-    env_file:
-      - "DataStructureService.env"
+    environment:
+      SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI}
+      SERVER_NAME: ${SERVER_NAME}
+      SUBDOMAIN: ${SUBDOMAIN}
     depends_on:
       - db
   db:
