@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_admin import Admin
 from flask_cors import CORS
@@ -10,6 +11,9 @@ from datasources import populate_palma_nova_bars
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI') # "postgresql://my-postgres:mysecretpassword@db:5432/approbator"
+    app.config['SERVER_NAME'] = os.getenv('SERVER_NAME') # 'approbatur.app:5000'  # Flask needs to know the server name for subdomains
+
     db.init_app(app)
     CORS(app, resources={r"/*": {"origins": "*"}})
     
@@ -22,6 +26,10 @@ def create_app():
         app.register_blueprint(main_blueprint)
         app.register_blueprint(admin_blueprint)
         geolocator = Nominatim(user_agent="myGeocoder")
+
+        # Set URL for admin views
+
+
         setup_admin(app, db)
 
         from models import Bar, Crawl, User, users_crawls, admins_crawls, crawls_bars
