@@ -17,9 +17,8 @@ services:
       dockerfile: ../docker/DataStructureService.Dockerfile
     ports:
       - "5001:5000"
-    environment:
-      SQLALCHEMY_DATABASE_URI: postgresql://my-postgres:mysecretpassword@db:5432/approbator
-      SERVER_NAME: approbatur.app
+    env_file:
+      - "DatastructureService/DataStructureService.env"
     image: ghcr.io/tik15ryyb/data-structure-service
     depends_on:
       - db
