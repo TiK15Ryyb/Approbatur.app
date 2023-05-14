@@ -17,8 +17,10 @@ services:
       dockerfile: ../docker/DataStructureService.Dockerfile
     ports:
       - "5001:5000"
-    env_file:
-      - "DatastructureService/DataStructureService.env"
+    environment:
+      SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI}
+      SERVER_NAME: ${SERVER_NAME}
+      SUBDOMAIN: ${SUBDOMAIN}
     image: ghcr.io/tik15ryyb/data-structure-service
     depends_on:
       - db
