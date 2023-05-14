@@ -16,6 +16,14 @@ jobs:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@main
 
+      - name: 'Generate DataStructureService.env file using template'
+        uses: cuchi/jinja2-action@v1.2.0
+        with:
+          template: ./DataStructureService/DataStructureService.env.template
+          output: ./DataStructureService/DataStructureService.env
+          variables: |
+            {{ secrets.DATA_STRUCTURE_SERVICE_ENV_VARIABLES_STRING }}
+
       - name: 'Login to GitHub Container Registry'
         uses: docker/login-action@v1
         with:
