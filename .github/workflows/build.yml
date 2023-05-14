@@ -26,6 +26,6 @@ jobs:
       - name: 'Build and push Project Image'
         run: |
           docker compose build front 
-          docker compose build data-structure-service -e SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI }} -e SERVER_NAME=${{ env.SERVER_NAME }} -e SUBDOMAIN=${{ env.SUBDOMAIN }}
+          docker compose build data-structure-service
           docker push ghcr.io/tik15ryyb/approbatur-app-front:latest
           docker push ghcr.io/tik15ryyb/data-structure-service:latest
