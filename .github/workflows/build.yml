@@ -26,4 +26,6 @@ jobs:
       - name: 'Build and push Project Image'
         run: |
           docker compose build front
+          docker compose build data-structure-service
           docker push ghcr.io/tik15ryyb/approbatur-app-front:latest
+          docker push ghcr.io/tik15ryyb/data-structure-service:latest
