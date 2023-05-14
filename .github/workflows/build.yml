@@ -20,7 +20,7 @@ jobs:
         uses: cuchi/jinja2-action@v1.2.0
         with:
           template: ./DataStructureService/DataStructureService.env.template
-          output: ./DataStructureService/DataStructureService.env
+          output_file: ./DataStructureService/DataStructureService.env
           variables: |
             SQLALCHEMY_DATABASE_URI=${{ secrets.SQLALCHEMY_DATABASE_URI }}
             SERVER_NAME=${{ env.SERVER_NAME }}
