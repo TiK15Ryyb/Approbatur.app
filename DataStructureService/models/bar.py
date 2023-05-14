@@ -5,7 +5,7 @@ from database import db
 class Bar(db.Model):
     __tablename__ = 'bar'
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.BigInteger, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(500), nullable=True)
     latitude = db.Column(db.Float, nullable=False)
