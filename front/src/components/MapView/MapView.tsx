@@ -39,14 +39,27 @@ const MapView: React.FC<Props> = () => {
   }, [crawlId]);
 
   const [viewport, setViewport] = useState<Viewport>({
-    latitude: crawl?.bars[0].location.latitude || 0,
-    longitude: crawl?.bars[0].location.longitude || 0,
+    latitude: crawl?.location.latitude || 0,
+    longitude: crawl?.location.longitude || 0,
     zoom: 14,
     bearing: 0,
     pitch: 0
   });
+
+  useEffect(() => {
+    if (crawl) {
+      setViewport({
+        latitude: crawl?.location.latitude,
+        longitude: crawl?.location.longitude,
+        zoom: 14,
+        bearing: 0,
+        pitch: 0
+      });
+    }
+  }, [crawl]);
+
   const [selectedBar, setSelectedBar] = useState<any>(crawl?.bars[0]);
-  const [visitedBars, setVisitedBars] = useState(new Array(crawl?.bars.length).fill(false));
+  const [visitedBars, setVisitedBars] = useState<Array<any>>([]);
   const [justVisited, setJustVisited] = useState(false);
   
   //Create and store user id in cookies
@@ -67,7 +80,7 @@ const MapView: React.FC<Props> = () => {
 
   const completionLimits = [ { limit: 2 }, { limit: 3 }, { limit: 5 }]
 
-  const visitedBarsCount = visitedBars.filter(x => x).length
+  const visitedBarsCount = visitedBars.length
 
   const canComplete = completionLimits.some(limitObj => visitedBarsCount >= limitObj.limit )
   
@@ -118,9 +131,9 @@ const MapView: React.FC<Props> = () => {
           </div>
         }
         {crawl?.bars.map((bar: any) => (
-          <Marker key={bar.id} latitude={bar.location.latitude} longitude={bar.location.longitude}>
+          <Marker key={`${bar.name}${bar.id}`} latitude={bar.location.latitude} longitude={bar.location.longitude}>
             <button
-              className="marker-btn"
+              className="marker-btn flex flex-col items-center justify-center"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation()
@@ -128,7 +141,7 @@ const MapView: React.FC<Props> = () => {
               }}
             >
               <p>{bar.name}</p>
-            <img src={visitedBars[bar.id] ? "visited-beer.svg" : "beer.svg"} alt="Beer Icon" />
+              <img className="h-8 w-8" src={visitedBars.includes(bar.id) ? "visited-beer.svg" : "beer.svg"} alt="Beer Icon" />
           </button>
           </Marker>
         ))}
@@ -144,13 +157,12 @@ const MapView: React.FC<Props> = () => {
             <div>
             <h2>{selectedBar.name}</h2>
             <p>{selectedBar.address}</p>
-          { visitedBars[selectedBar.id] 
+          { visitedBars.includes(selectedBar.id) 
             ? <button
                 className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
                 onClick={(e) => {
                   e.preventDefault();
-                  let newVisitedBars = [...visitedBars];
-                  newVisitedBars[selectedBar.id] = false;
+                  const newVisitedBars = visitedBars.filter((barId) => barId !== selectedBar.id);
                   setVisitedBars(newVisitedBars);
                 }}
               >
@@ -160,10 +172,8 @@ const MapView: React.FC<Props> = () => {
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
               onClick={(e) => {
                 e.preventDefault();
-                let newVisitedBars = [...visitedBars];
-                newVisitedBars[selectedBar.id] = true;
+                const newVisitedBars = [...(visitedBars.filter(barId => barId !== selectedBar.id)), selectedBar.id];
                 setVisitedBars(newVisitedBars);
-                setSelectedBar(null);
                 setJustVisited(true);
                 setTimeout(() => setJustVisited(false), 2000);
               }}
