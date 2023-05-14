@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from geopy.geocoders import Nominatim
 from config import Config
 from database import db
+from datasources import populate_palma_nova_bars
 
 def create_app():
     app = Flask(__name__)
@@ -26,7 +27,9 @@ def create_app():
         from models import Bar, Crawl, User, users_crawls, admins_crawls, crawls_bars
 
         db.create_all()
-    
+
+        populate_palma_nova_bars(db)
+
     return app
 
 app = create_app()
