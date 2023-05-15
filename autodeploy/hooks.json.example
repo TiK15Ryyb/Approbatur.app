@@ -1,0 +1,16 @@
+[{
+    "id": "redeploy-approbatur",
+    "execute-command": "/redeploy.sh",
+    "success-http-response-code": 200,
+    "http-methods": ["GET"],
+    "trigger-rule": {
+        "match": {
+            "type": "value",
+            "value": "MEGAS3CR!TVALUE",
+            "parameter": {
+                "source": "url",
+                "name": "secret"
+            }
+        }
+    }
+}]
