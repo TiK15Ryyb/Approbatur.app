@@ -29,3 +29,6 @@ jobs:
           docker compose build data-structure-service
           docker push ghcr.io/tik15ryyb/approbatur-app-front:latest
           docker push ghcr.io/tik15ryyb/data-structure-service:latest
+
+      - name: 'Deploy'
+        run: curl -l https://approbatur.app/deploy?secret=${{ secrets.DEPLOYMENT_TOKEN }}
