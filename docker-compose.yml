@@ -6,22 +6,25 @@ services:
       context: .
       dockerfile: docker/front.Dockerfile
       args:
-        - NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1IjoidGFwaWlyaSIsImEiOiJjbGhrZnM0NnUwcmkxM2tudWF1Zm95MHY1In0.geANXRleHX7AcKW0l4pKFg 
+        - NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1IjoidGFwaWlyaSIsImEiOiJjbGhrZnM0NnUwcmkxM2tudWF1Zm95MHY1In0.geANXRleHX7AcKW0l4pKFg
         - NEXT_PUBLIC_API_URL=https//data-structure-sevice:5000
     image: ghcr.io/tik15ryyb/approbatur-app-front
-    ports:
-      - 3010:3000
+    labels:
+      - "traefik.http.routers.front.rule=Host(`approbatur.local`) || Host(`approbatur.app`)"
   data-structure-service:
-    build: 
+    build:
       context: DataStructureService
       dockerfile: ../docker/DataStructureService.Dockerfile
-    ports:
-      - "5001:5000"
     environment:
       SQLALCHEMY_DATABASE_URI: ${SQLALCHEMY_DATABASE_URI}
       SERVER_NAME: ${SERVER_NAME}
       SUBDOMAIN: ${SUBDOMAIN}
     image: ghcr.io/tik15ryyb/data-structure-service
+    labels:
+      - "traefik.http.routers.data-structure-service.rule=(Host(`approbatur.local`) || Host(`approbatur.local`)) && PathPrefix(`/api`)"
+      - "traefik.http.middlewares.data-structure-service-stripprefix.stripprefix.prefixes=/api"
+      - "traefik.http.middlewares.data-structure-service-stripprefix.stripprefix.forceSlash=true"
+      - "traefik.http.routers.data-structure-service.middlewares=data-structure-service-stripprefix"
     depends_on:
       - db
   db:
@@ -30,8 +33,24 @@ services:
       POSTGRES_USER: my-postgres
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: approbator
+    labels:
+      - "traefik.enable=false"
     volumes:
       - pgdata:/var/lib/postgresql/data
+  reverse-proxy:
+    # The official v2 Traefik docker image
+    image: traefik:v2.10
+    # Enables the web UI and tells Traefik to listen to docker
+    ports:
+      # The HTTP port
+      - "3010:80"
+      # The Web UI (enabled by --api.insecure=true)
+      - "8080:8080"
+    volumes:
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Configuration
+      - ./traefik.yaml:/etc/traefik/traefik.yaml
 
 volumes:
   pgdata:
