@@ -60,7 +60,18 @@ const MapView: React.FC<Props> = () => {
 
   const [selectedBar, setSelectedBar] = useState<any>(crawl?.bars[0]);
   const [visitedBars, setVisitedBars] = useState<Array<any>>([]);
+  useEffect(() => {
+    const visitedBars = localStorage.getItem('visitedBars');
+    if (visitedBars) {
+      setVisitedBars(JSON.parse(visitedBars));
+    }
+  }, []);
+  useEffect(() => {
+    localStorage.setItem('visitedBars', JSON.stringify(visitedBars));
+  }, [visitedBars]);
+
   const [justVisited, setJustVisited] = useState(false);
+
   
   //Create and store user id in cookies
   const [userId, setUserId] = useState<string | null>(null);
@@ -86,7 +97,8 @@ const MapView: React.FC<Props> = () => {
   
 
   const navigateToSummaryScreen = () => {
-    window.location.href = "/report"
+    localStorage.setItem('completedBars', JSON.stringify(visitedBarsCount));
+    window.location.href = "/report";
   }
 
   const handleFinish = () => {
@@ -115,7 +127,7 @@ const MapView: React.FC<Props> = () => {
   return (
     <div style={{ position: 'relative', height: '100vh' }}>
       <ProgressBar totalBars={crawl?.bars.length} visitedBars={visitedBarsCount}/>
-      <Badges visitedBars={visitedBarsCount} />
+      <Badges visitedBars={visitedBarsCount} totalBars={crawl.bars.length}/>
       <ReactMapGL
         {...viewport}
         mapStyle="mapbox://styles/mapbox/streets-v11"
