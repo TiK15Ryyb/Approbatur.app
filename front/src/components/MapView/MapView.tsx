@@ -98,7 +98,7 @@ const MapView: React.FC<Props> = () => {
 
   const navigateToSummaryScreen = () => {
     localStorage.setItem('completedBars', JSON.stringify(visitedBarsCount));
-    window.location.href = "/report";
+    window.location.href = "/report?crawlId=" + crawlId;
   }
 
   const handleFinish = () => {
