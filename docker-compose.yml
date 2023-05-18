@@ -11,6 +11,8 @@ services:
     image: ghcr.io/tik15ryyb/approbatur-app-front
     labels:
       - "traefik.http.routers.front.rule=Host(`${SERVER_NAME}`)"
+    depends_on:
+      - db
   data-structure-service:
     build:
       context: DataStructureService
